@@ -1,0 +1,22 @@
+Global:
+    version: "2.0"
+
+Default:
+    profile: [app]
+
+Profiles:
+    - profile:
+      name: app
+      mode: AGENT
+      environment:
+        image: DECK_CENTOS7U5_K3
+        tools:
+        - nodejs: 18.3.0
+      build:
+        command: sh scripts/build.sh
+      excludeTools: []
+      artifacts:
+        release: true
+      check:
+        - enable: true
+          reuse: TASK
