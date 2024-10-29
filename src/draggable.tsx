@@ -6,8 +6,8 @@ const BaseForm = defineComponent({
     name: 'BaseForm',
     props: {
         list: {
-            type: Array,
-            default: () => []
+            type: Object,
+            default: () => {}
         },
         isClone: {
             type: Boolean,
@@ -17,12 +17,11 @@ const BaseForm = defineComponent({
     setup(props) {
         const formRef = ref()
         const els = ref()
-        const lists = reactive({ value: props.list || [] })
-        function onUpdate() {
-            console.log('update')
+        function onUpdate(event: DraggableEvent) {
+            console.log(event, 'update')
         }
-        function onAdd() {
-            console.log('add')
+        function onAdd(event: DraggableEvent) {
+            console.log(event, 'onAdd')
         }
         function onRemove() {
             console.log('remove')
@@ -36,7 +35,6 @@ const BaseForm = defineComponent({
         }
         function clone(element: Record<'name' | 'id', string>) {
             const len = props.list?.length
-            console.log(len, 'clone')
 
             return {
                 name: `${element.name}-clone-${len}`,
@@ -48,7 +46,6 @@ const BaseForm = defineComponent({
             formRef,
             onUpdate,
             onAdd,
-            lists,
             onRemove,
             clone,
             onStart,
@@ -58,7 +55,6 @@ const BaseForm = defineComponent({
     render() {
         const {
             list,
-            lists,
             onUpdate,
             onAdd,
             onRemove,
@@ -71,17 +67,20 @@ const BaseForm = defineComponent({
         return (
             <VueDraggable
                 class='form-list'
-                v-model={lists.value}
+                v-model={list.value}
                 animation='150'
                 clone={isClone ? clone : () => {}}
                 sort={false}
+                onUpdate={onUpdate}
+                onAdd={onAdd}
+                onRemove={onRemove}
                 group={
                     isClone
                         ? { name: 'people', pull: 'clone', put: false }
                         : 'people'
                 }
             >
-                {list.map((item, index) => {
+                {list.value.map((item, index) => {
                     return (
                         <div key={item?.id} class='form-item-drag'>
                             <div class='form-item'>{item.name}</div>

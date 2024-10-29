@@ -15,30 +15,32 @@ const App = defineComponent({
     name: 'App',
     setup() {
         const formRef = ref()
-        const list1 = ref([
-            {
-                name: 'Joao',
-                id: 1
-            },
-            {
-                name: 'Jean',
-                id: 2
-            },
-            {
-                name: 'Johanna',
-                id: 3
-            },
-            {
-                name: 'Juan',
-                id: 4
-            }
-        ])
-        const list2 = ref(
-            list1.value.map((item) => ({
+        const list1 = reactive({
+            value: [
+                {
+                    name: 'Joao',
+                    id: 1
+                },
+                {
+                    name: 'Jean',
+                    id: 2
+                },
+                {
+                    name: 'Johanna',
+                    id: 3
+                },
+                {
+                    name: 'Juan',
+                    id: 4
+                }
+            ]
+        })
+        const list2 = reactive({
+            value: list1.value.map((item) => ({
                 name: `${item.name}-2`,
                 id: `${item.id}-2`
             }))
-        )
+        })
 
         function onUpdate() {
             console.log('update')
