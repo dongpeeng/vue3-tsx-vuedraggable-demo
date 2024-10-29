@@ -1,4 +1,4 @@
-import { defineComponent, ref } from 'vue'
+import { defineComponent, reactive, ref } from 'vue'
 
 import { useDraggable } from 'vue-draggable-plus'
 import { VueDraggable, DraggableEvent } from 'vue-draggable-plus'
@@ -17,7 +17,7 @@ const BaseForm = defineComponent({
     setup(props) {
         const formRef = ref()
         const els = ref()
-
+        const lists = reactive({ value: props.list || [] })
         function onUpdate() {
             console.log('update')
         }
@@ -36,6 +36,8 @@ const BaseForm = defineComponent({
         }
         function clone(element: Record<'name' | 'id', string>) {
             const len = props.list?.length
+            console.log(len, 'clone')
+
             return {
                 name: `${element.name}-clone-${len}`,
                 id: `${element.id}-clone-${len}`
@@ -46,6 +48,7 @@ const BaseForm = defineComponent({
             formRef,
             onUpdate,
             onAdd,
+            lists,
             onRemove,
             clone,
             onStart,
@@ -55,6 +58,7 @@ const BaseForm = defineComponent({
     render() {
         const {
             list,
+            lists,
             onUpdate,
             onAdd,
             onRemove,
@@ -63,13 +67,14 @@ const BaseForm = defineComponent({
             onStart,
             onEnd
         } = this
+
         return (
             <VueDraggable
                 class='form-list'
-                v-model:value={list}
+                v-model={lists.value}
                 animation='150'
-                clone={isClone ? clone : null}
-                sort={true}
+                clone={isClone ? clone : () => {}}
+                sort={false}
                 group={
                     isClone
                         ? { name: 'people', pull: 'clone', put: false }
